@@ -3,4 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="userpass">نام کاربری و رمز عبور را وارد کنید</string>
+    <string name="todo">TODO</string>
+    <string name="doing">DOING</string>
+    <string name="done">DONE</string>
 </resources>
