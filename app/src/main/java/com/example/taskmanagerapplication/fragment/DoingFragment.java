@@ -7,11 +7,14 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.taskmanagerapplication.R;
 
 
 public class DoingFragment extends Fragment {
+
+    private TextView mTextView;
 
     public DoingFragment() {
         // Required empty public constructor
@@ -35,6 +38,8 @@ public class DoingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_doing, container, false);
+
+        mTextView = view.findViewById(R.id.textviewDoing);
 
         return view;
     }

@@ -24,7 +24,6 @@ public class ManagerActivity extends AppCompatActivity {
 
     private TabLayout mTabLayout;
     private ViewPager2 mViewPager;
-    private TabItem mTabTodo, mTabDoing, mTabDone;
     PageAdapter mPageAdapter;
 
     @Override
@@ -34,38 +33,54 @@ public class ManagerActivity extends AppCompatActivity {
 
         findViews();
         initView();
-        setListeners();
+        //setListeners();
+    }
+
+    private void findViews() {
+        mViewPager = findViewById(R.id.viewPager);
+        mTabLayout = findViewById(R.id.tabLayout);
     }
 
     private void initView() {
-        mPageAdapter = new PageAdapter(this, mTabLayout.getTabCount());
+        mPageAdapter = new PageAdapter(this);
         mViewPager.setAdapter(mPageAdapter);
 
-        //TabLayoutMediator(mTabLayout,mViewPager)
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator
+                (mTabLayout, mViewPager, new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        switch (position) {
+                            case 0: {
+                                tab.setText("TODO");
+                                break;
+                            }
+                            case 1: {
+                                tab.setText("DOING");
+                                break;
+                            }
+                            case 2: {
+                                tab.setText("DONE");
+                                break;
+                            }
+                        }
+                    }
+                });
 
-    }
+        tabLayoutMediator.attach();
 
-    private void findViews(){
-        mTabLayout = findViewById(R.id.tabLayout);
-        mTabDoing = findViewById(R.id.tabDoing);
-        mTabTodo = findViewById(R.id.tabTodo);
-        mTabDone = findViewById(R.id.tabDone);
-        mViewPager = findViewById(R.id.viewPager);
     }
 
     private class PageAdapter extends FragmentStateAdapter {
 
-        private int numOfTabs;
 
-        public PageAdapter(@NonNull FragmentActivity fragmentActivity, int numOfTabs) {
+        public PageAdapter(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
-            this.numOfTabs = numOfTabs;
         }
 
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            switch (position){
+            switch (position) {
                 case 0:
                     return ToDoFragment.newInstance();
                 case 1:
@@ -79,33 +94,9 @@ public class ManagerActivity extends AppCompatActivity {
 
         @Override
         public int getItemCount() {
-            return numOfTabs;
+            return 3;
         }
-    }
 
-    private void setListeners(){
-        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mViewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition()==0){
-                    mPageAdapter.notifyDataSetChanged();
-                } else if (tab.getPosition()==1)
-                    mPageAdapter.notifyDataSetChanged();
-                else if (tab.getPosition()==2)
-                    mPageAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
 
