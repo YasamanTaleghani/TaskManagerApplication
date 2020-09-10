@@ -9,12 +9,11 @@
     android:paddingBottom="10dp"
     tools:context=".fragment.ToDoFragment">
 
-
-    <TextView
-        android:id="@+id/textviewTodo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ToDo Fragment" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ToDoRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton2"

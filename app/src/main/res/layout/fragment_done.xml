@@ -9,11 +9,11 @@
     android:paddingBottom="10dp"
     tools:context=".fragment.DoneFragment">
 
-    <TextView
-        android:id="@+id/textviewDone"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/DoneRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Done Fragment" />
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_Add_donefragment"

@@ -8,11 +8,11 @@
     android:paddingBottom="10dp"
     tools:context=".fragment.DoingFragment">
 
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/DoingRecyclerView"
         android:layout_width="match_parent"
-        android:id="@+id/textviewDoing"
-        android:layout_height="match_parent"
-        android:text="Doing Fragment" />
+        android:layout_height="match_parent">
+    </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
