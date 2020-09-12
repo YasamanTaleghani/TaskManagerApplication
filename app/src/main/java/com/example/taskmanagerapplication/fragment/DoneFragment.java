@@ -25,6 +25,8 @@ public class DoneFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DoneTaskAdapter mDoneTaskAdapter;
     private DoneRepository mDoneRepository;
+    private ImageView mImageView;
+    private TextView mTextView;
 
     public DoneFragment() {
         // Required empty public constructor
@@ -64,6 +66,8 @@ public class DoneFragment extends Fragment {
 
     private void findViews(View view) {
         mRecyclerView = view.findViewById(R.id.DoneRecyclerView);
+        mImageView = view.findViewById(R.id.imageView);
+        mTextView = view.findViewById(R.id.textview);
     }
 
     private void initViews() {
@@ -73,6 +77,14 @@ public class DoneFragment extends Fragment {
 
     private void updateUI() {
         List<Task> tasks = mDoneRepository.getTasks();
+
+        if (tasks.size() == 0) {
+            mImageView.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.VISIBLE);
+        } else {
+            mImageView.setVisibility(View.GONE);
+            mTextView.setVisibility(View.GONE);
+        }
 
         if (mDoneTaskAdapter == null) {
             mDoneTaskAdapter = new DoneTaskAdapter(tasks);

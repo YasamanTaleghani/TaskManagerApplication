@@ -21,13 +21,13 @@ public class DoingRepository implements DoingInterface{
 
     private DoingRepository() {
         mTasks = new ArrayList<>();
-        for (int i = 0; i < 10 ; i++) {
+        /*for (int i = 0; i < 10 ; i++) {
             Task task = new Task();
             task.setTitle("Task#" + (i + 1));
             task.setSolved(i % 2 == 0);
 
             mTasks.add(task);
-        }
+        }*/
     }
 
 

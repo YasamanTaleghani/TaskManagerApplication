@@ -12,16 +12,35 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/DoneRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_Add_donefragment"
+        android:id="@+id/floatingActionButton_done"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"/>
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp"
+        android:text="@string/you_don_t_have_any_tasks"
+        android:visibility="gone">
+    </TextView>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/notebook_icon"
+        android:visibility="gone" />
 
 </RelativeLayout>

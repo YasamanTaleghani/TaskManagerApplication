@@ -26,6 +26,8 @@ public class DoingFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private DoingTaskAdapter mDoingTaskAdapter;
     private DoingRepository mDoingRepository;
+    private ImageView mImageView;
+    private TextView mTextView;
 
     public DoingFragment() {
         // Required empty public constructor
@@ -66,6 +68,8 @@ public class DoingFragment extends Fragment {
 
     private void findViews(View view) {
         mRecyclerView = view.findViewById(R.id.DoingRecyclerView);
+        mImageView = view.findViewById(R.id.imageView);
+        mTextView = view.findViewById(R.id.textview);
     }
 
     private void initViews() {
@@ -75,6 +79,14 @@ public class DoingFragment extends Fragment {
 
     private void updateUI() {
         List<Task> tasks = mDoingRepository.getTasks();
+
+        if (tasks.size() == 0) {
+            mImageView.setVisibility(View.VISIBLE);
+            mTextView.setVisibility(View.VISIBLE);
+        } else {
+            mImageView.setVisibility(View.GONE);
+            mTextView.setVisibility(View.GONE);
+        }
 
         if (mDoingTaskAdapter == null) {
             mDoingTaskAdapter = new DoingTaskAdapter(tasks);

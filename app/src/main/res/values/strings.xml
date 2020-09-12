@@ -6,4 +6,7 @@
     <string name="todo">TODO</string>
     <string name="doing">DOING</string>
     <string name="done">DONE</string>
+    <string name="you_don_t_have_any_tasks">You Don\'t have any tasks</string>
+    <string name="save">Save</string>
+    <string name="cacle">Cancle</string>
 </resources>

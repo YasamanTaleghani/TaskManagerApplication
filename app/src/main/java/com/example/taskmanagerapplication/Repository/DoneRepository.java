@@ -21,15 +21,14 @@ public class DoneRepository implements DoneInterface{
 
     private DoneRepository() {
         mTasks = new ArrayList<>();
-        for (int i = 0; i < 20 ; i++) {
+        /*for (int i = 0; i < 20 ; i++) {
             Task task = new Task();
             task.setTitle("Task#" + (i + 1));
             task.setSolved(i % 2 == 0);
 
             mTasks.add(task);
-        }
+        }*/
     }
-
 
     @Override
     public List<Task> getTasks() {
