@@ -1,5 +1,6 @@
 package com.example.taskmanagerapplication.model;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,7 +15,8 @@ public class Task {
     //Constructor
     public Task() {
         mId = UUID.randomUUID();
-        mDate = new Date();
+        Calendar calendar = Calendar.getInstance();
+        mDate = calendar.getTime();
     }
 
     //Getter & Setters
