@@ -4,29 +4,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.taskmanagerapplication.R;
 import com.example.taskmanagerapplication.fragment.LoginFragment;
 
-public class loginActivity extends AppCompatActivity {
+import java.util.UUID;
+
+public class loginActivity extends SingleFragmentActivity {
+
+    public static final String EXTRA_CRIME_ID = "com.example.criminalintent.crimeId";
+
+    public static Intent newIntent(Context context, UUID crimeId) {
+        Intent intent = new Intent(context, ManagerActivity.class);
+        intent.putExtra(EXTRA_CRIME_ID, crimeId);
+        return intent;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+    public Fragment createFragment() {
+        UUID userId = (UUID) getIntent().getSerializableExtra(EXTRA_CRIME_ID);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = fragmentManager.findFragmentById(R.id.Login_Container);
-
-        //create an add fragment transaction for CrimeDetailFragment
-        if (fragment == null) {
-            LoginFragment loginFragment = LoginFragment.newInstance();
-            fragmentManager
-                    .beginTransaction()
-                    .add(R.id.Login_Container,loginFragment)
-                    .commit();
-        }
+        LoginFragment loginFragment = LoginFragment.newInstance(userId);
+        return loginFragment;
     }
 }
