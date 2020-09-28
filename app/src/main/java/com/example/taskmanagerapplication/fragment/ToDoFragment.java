@@ -60,7 +60,7 @@ public class ToDoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mToDoRepository = ToDoRepository.getInstance();
+        mToDoRepository = ToDoRepository.getInstance(getActivity());
     }
 
     @Override

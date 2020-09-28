@@ -13,5 +13,5 @@ public interface ToDoInterface {
     void updateTask(Task task);
     void deleteTask(Task task);
     int getPosition(UUID taskId);
-    public void setTasks(List<Task> tasks);
+    boolean searchTask(Task task);
 }

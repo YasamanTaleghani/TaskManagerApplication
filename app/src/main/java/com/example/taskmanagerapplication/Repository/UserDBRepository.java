@@ -77,8 +77,8 @@ public class UserDBRepository implements UsRepository {
         Cursor cursor = mDatabase.query(
                 UserDBSchema.userTable.NAME,
                 null,
-                null,
-                null,
+                where,
+                whereArgs,
                 null,
                 null,
                 null);

@@ -19,6 +19,14 @@ public class Task {
         mDate = calendar.getTime();
     }
 
+    public Task(UUID id, String title, String description, Date date, Boolean solved){
+        mId = id;
+        mTitle = title;
+        mDescription = description;
+        mDate = date;
+        mSolved = solved;
+    }
+
     //Getter & Setters
     public UUID getId() {
         return mId;
@@ -59,6 +67,5 @@ public class Task {
     public void setSolved(boolean solved) {
         mSolved = solved;
     }
-
 
 }

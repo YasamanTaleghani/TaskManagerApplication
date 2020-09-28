@@ -4,9 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import static com.example.taskmanagerapplication.database.UserDBSchema.userTable.Cols;
-import static com.example.taskmanagerapplication.database.ToDoDBSchema.toDoTable.TodoCols;
-import static com.example.taskmanagerapplication.database.DoingDBSchema.doingTable.DoingCols;
-import static com.example.taskmanagerapplication.database.DoneDBSchema.doneTable.DoneCols;
+import static com.example.taskmanagerapplication.database.UserDBSchema.toDoTable.TodoCols;
+import static com.example.taskmanagerapplication.database.UserDBSchema.doingTable.DoingCols;
+import static com.example.taskmanagerapplication.database.UserDBSchema.doneTable.DoneCols;
 
 import androidx.annotation.Nullable;
 
@@ -29,7 +29,7 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sbQuery.toString());
 
         StringBuilder todoQuery = new StringBuilder();
-        todoQuery.append("CREATE TABLE " + ToDoDBSchema.toDoTable.NAME + " (");
+        todoQuery.append("CREATE TABLE " + UserDBSchema.toDoTable.NAME + " (");
         todoQuery.append(TodoCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
         todoQuery.append(TodoCols.UUID + " TEXT NOT NULL,");
         todoQuery.append(TodoCols.TITLE + " TEXT,");
@@ -41,7 +41,7 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(todoQuery.toString());
 
         StringBuilder doingQuery = new StringBuilder();
-        doingQuery.append("CREATE TABLE " + DoingDBSchema.doingTable.NAME + " (");
+        doingQuery.append("CREATE TABLE " + UserDBSchema.doingTable.NAME + " (");
         doingQuery.append(DoingCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
         doingQuery.append(DoingCols.UUID + " TEXT NOT NULL,");
         doingQuery.append(DoingCols.TITLE + " TEXT,");
@@ -53,7 +53,7 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(doingQuery.toString());
 
         StringBuilder doneQuery = new StringBuilder();
-        doneQuery.append("CREATE TABLE " + DoneDBSchema.doneTable.NAME + " (");
+        doneQuery.append("CREATE TABLE " + UserDBSchema.doneTable.NAME + " (");
         doneQuery.append(DoneCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
         doneQuery.append(DoneCols.UUID + " TEXT NOT NULL,");
         doneQuery.append(DoneCols.TITLE + " TEXT,");
