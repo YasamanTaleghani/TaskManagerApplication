@@ -1,5 +1,7 @@
 package com.example.taskmanagerapplication.fragment;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +23,7 @@ import com.example.taskmanagerapplication.R;
 import com.example.taskmanagerapplication.Repository.DoneRepository;
 import com.example.taskmanagerapplication.Repository.ToDoRepository;
 import com.example.taskmanagerapplication.model.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
@@ -27,6 +34,7 @@ public class DoneFragment extends Fragment {
     private DoneRepository mDoneRepository;
     private ImageView mImageView;
     private TextView mTextView;
+    private FloatingActionButton mFloatingActionButton;
 
     public DoneFragment() {
         // Required empty public constructor
@@ -42,7 +50,7 @@ public class DoneFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDoneRepository = DoneRepository.getInstance();
+        mDoneRepository = DoneRepository.getInstance(getActivity());
     }
 
     @Override
@@ -53,6 +61,7 @@ public class DoneFragment extends Fragment {
 
         findViews(view);
         initViews();
+        setListeners();
 
         return view;
     }
@@ -68,6 +77,7 @@ public class DoneFragment extends Fragment {
         mRecyclerView = view.findViewById(R.id.DoneRecyclerView);
         mImageView = view.findViewById(R.id.imageView);
         mTextView = view.findViewById(R.id.textview);
+        mFloatingActionButton = view.findViewById(R.id.floatingActionButton_done);
     }
 
     private void initViews() {
@@ -90,6 +100,7 @@ public class DoneFragment extends Fragment {
             mDoneTaskAdapter = new DoneTaskAdapter(tasks);
             mRecyclerView.setAdapter(mDoneTaskAdapter);
         } else {
+            mDoneTaskAdapter.setTasks(tasks);
             mDoneTaskAdapter.notifyDataSetChanged();
         }
     }
@@ -159,5 +170,99 @@ public class DoneFragment extends Fragment {
         public int getItemCount() {
             return mTasks.size();
         }
+    }
+
+    private void setListeners(){
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDialog();
+            }
+        });
+    }
+
+    public void openDialog() {
+        AddTaskDialogFragment taskDialogFragment = new AddTaskDialogFragment(getActivity());
+        taskDialogFragment.show();
+    }
+
+    public class AddTaskDialogFragment extends Dialog implements android.view.View.OnClickListener{
+
+        private Activity mActivity;
+        private Task mTask;
+        private Dialog mDialog;
+        private EditText mTitle, mDescription;
+        private Button save, cancel;
+        private CheckBox mCheckBox;
+        private Button mButtonDatePicker, mButtonTimePicker;
+
+        public AddTaskDialogFragment(Activity activity){
+            super(activity);
+            mActivity = activity;
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            setContentView(R.layout.starting_dialog_layout);
+
+            save = findViewById(R.id.btn_save);
+            cancel = findViewById(R.id.btn_cancle);
+            mCheckBox = findViewById(R.id.checkbox_task);
+            mTitle = findViewById(R.id.title_edittext);
+            mDescription = findViewById(R.id.description_edittext);
+            mButtonDatePicker = findViewById(R.id.btn_date);
+            mButtonTimePicker = findViewById(R.id.btn_time);
+
+            save.setOnClickListener(this);
+            cancel.setOnClickListener(this);
+            mButtonDatePicker.setOnClickListener(this);
+            mButtonTimePicker.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            switch (view.getId())
+            {
+                case R.id.btn_save:
+                    mTask = new Task();
+                    mTask.setTitle(mTitle.getText().toString());
+                    mTask.setDescription(mDescription.getText().toString());
+                    mTask.setSolved(mCheckBox.isChecked());
+                    mDoneRepository.insertTask(mTask);
+                    updateUI();
+                    break;
+
+                case R.id.btn_cancle:
+                    dismiss();
+                    break;
+
+                case R.id.btn_date:
+                    DatePickerFragment datePickerFragment =
+                            DatePickerFragment.newInstance(mTask.getDate());
+
+                    //create parent-child relations between CDF and DPF
+                    /*datePickerFragment.setTargetFragment(
+                            CrimeDetailFragment.this,
+                            REQUEST_CODE_DATE_PICKER);*/
+
+                    datePickerFragment.show(
+                            getActivity().getSupportFragmentManager(),
+                            "Fragment_tag_date_picker");
+                    break;
+
+                case R.id.btn_time:
+                    //todo
+                    break;
+
+                default:
+                    break;
+            }
+            dismiss();
+        }
+
     }
 }

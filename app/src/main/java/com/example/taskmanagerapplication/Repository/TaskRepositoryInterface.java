@@ -5,7 +5,7 @@ import com.example.taskmanagerapplication.model.Task;
 import java.util.List;
 import java.util.UUID;
 
-public interface ToDoInterface {
+public interface TaskRepositoryInterface {
 
     List<Task> getTasks();
     Task getTask(UUID taskId);

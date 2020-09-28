@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public class ToDoRepository implements ToDoInterface{
+public class ToDoRepository implements TaskRepositoryInterface {
 
     private static ToDoRepository sInstance;
     private SQLiteDatabase mDatabase;

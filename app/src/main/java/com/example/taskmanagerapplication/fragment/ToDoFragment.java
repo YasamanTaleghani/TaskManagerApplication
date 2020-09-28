@@ -109,6 +109,7 @@ public class ToDoFragment extends Fragment {
                 mToDoTaskAdapter = new ToDoTaskAdapter(tasks);
                 mRecyclerView.setAdapter(mToDoTaskAdapter);
             } else {
+                mToDoTaskAdapter.setTasks(tasks);
                 mToDoTaskAdapter.notifyDataSetChanged();
             }
         }
