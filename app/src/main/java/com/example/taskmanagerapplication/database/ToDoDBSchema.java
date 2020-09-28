@@ -8,14 +8,14 @@ public class ToDoDBSchema {
     public static final class toDoTable {
         public static final String NAME = "toDoTable";
 
-        public static final class Cols {
+        public static final class TodoCols {
             //this column in only for database
-            public static final String TODOID = "todo_id";
-            public static final String TODOUUID = "todo_uuid";
-            public static final String TODOTITLE = "todo_title";
-            public static final String TODODESCRIPTION = "todo_description";
-            public static final String TODODATE = "todo_date";
-            public static final String TODOSOLVED = "todo_solved";
+            public static final String ID = "todo_id";
+            public static final String UUID = "todo_uuid";
+            public static final String TITLE = "todo_title";
+            public static final String DESCRIPTION = "todo_description";
+            public static final String DATE = "todo_date";
+            public static final String SOLVED = "todo_solved";
         }
     }
 }

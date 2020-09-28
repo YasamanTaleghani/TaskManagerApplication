@@ -8,14 +8,14 @@ public class DoingDBSchema {
     public static final class doingTable {
         public static final String NAME = "doingTable";
 
-        public static final class Cols {
+        public static final class DoingCols {
             //this column in only for database
-            public static final String DOINGID = "doing_id";
-            public static final String DOINGUUID = "doing_uuid";
-            public static final String DOINGTITLE = "doing_title";
-            public static final String DOINGDESCRIPTION = "doing_description";
-            public static final String DOINGDATE = "doing_date";
-            public static final String DOINGSOLVED = "doing_solved";
+            public static final String ID = "doing_id";
+            public static final String UUID = "doing_uuid";
+            public static final String TITLE = "doing_title";
+            public static final String DESCRIPTION = "doing_description";
+            public static final String DATE = "doing_date";
+            public static final String SOLVED = "doing_solved";
         }
     }
 

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import static com.example.taskmanagerapplication.database.UserDBSchema.userTable.Cols;
+import static com.example.taskmanagerapplication.database.ToDoDBSchema.toDoTable.TodoCols;
+import static com.example.taskmanagerapplication.database.DoingDBSchema.doingTable.DoingCols;
+import static com.example.taskmanagerapplication.database.DoneDBSchema.doneTable.DoneCols;
 
 import androidx.annotation.Nullable;
 
@@ -24,6 +27,42 @@ public class TaskDBHelper extends SQLiteOpenHelper {
         sbQuery.append(");");
 
         sqLiteDatabase.execSQL(sbQuery.toString());
+
+        StringBuilder todoQuery = new StringBuilder();
+        todoQuery.append("CREATE TABLE " + ToDoDBSchema.toDoTable.NAME + " (");
+        todoQuery.append(TodoCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
+        todoQuery.append(TodoCols.UUID + " TEXT NOT NULL,");
+        todoQuery.append(TodoCols.TITLE + " TEXT,");
+        todoQuery.append(TodoCols.DESCRIPTION + " TEXT,");
+        todoQuery.append(TodoCols.DATE + " TEXT,");
+        todoQuery.append(TodoCols.SOLVED + " INTEGER");
+        todoQuery.append(");");
+
+        sqLiteDatabase.execSQL(todoQuery.toString());
+
+        StringBuilder doingQuery = new StringBuilder();
+        doingQuery.append("CREATE TABLE " + DoingDBSchema.doingTable.NAME + " (");
+        doingQuery.append(DoingCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
+        doingQuery.append(DoingCols.UUID + " TEXT NOT NULL,");
+        doingQuery.append(DoingCols.TITLE + " TEXT,");
+        doingQuery.append(DoingCols.DESCRIPTION + " TEXT,");
+        doingQuery.append(DoingCols.DATE + " TEXT,");
+        doingQuery.append(DoingCols.SOLVED + " INTEGER");
+        doingQuery.append(");");
+
+        sqLiteDatabase.execSQL(doingQuery.toString());
+
+        StringBuilder doneQuery = new StringBuilder();
+        doneQuery.append("CREATE TABLE " + DoneDBSchema.doneTable.NAME + " (");
+        doneQuery.append(DoneCols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT," );
+        doneQuery.append(DoneCols.UUID + " TEXT NOT NULL,");
+        doneQuery.append(DoneCols.TITLE + " TEXT,");
+        doneQuery.append(DoneCols.DESCRIPTION + " TEXT,");
+        doneQuery.append(DoneCols.DATE + " TEXT,");
+        doneQuery.append(DoneCols.SOLVED + " INTEGER");
+        doneQuery.append(");");
+
+        sqLiteDatabase.execSQL(doneQuery.toString());
     }
 
     @Override
