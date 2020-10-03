@@ -1,15 +1,33 @@
 package com.example.taskmanagerapplication.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
+@Entity(tableName = "taskTable")
 public class Task {
 
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "primaryId")
+    private Long mPrimaryId;
+
+    @ColumnInfo(name = "uuid")
     private UUID mId;
+
+    @ColumnInfo(name = "title")
     private String mTitle;
+
+    @ColumnInfo(name = "description")
     private String mDescription;
+
+    @ColumnInfo(name = "date")
     private Date mDate;
+
+    @ColumnInfo(name = "solved")
     private boolean mSolved;
 
     //Constructor
@@ -28,6 +46,14 @@ public class Task {
     }
 
     //Getter & Setters
+    public Long getPrimaryId() {
+        return mPrimaryId;
+    }
+
+    public void setPrimaryId(Long primaryId) {
+        mPrimaryId = primaryId;
+    }
+
     public UUID getId() {
         return mId;
     }
