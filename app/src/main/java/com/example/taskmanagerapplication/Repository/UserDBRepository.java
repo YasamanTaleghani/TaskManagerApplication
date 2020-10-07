@@ -1,23 +1,17 @@
 package com.example.taskmanagerapplication.Repository;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-
-import com.example.taskmanagerapplication.database.TaskDBHelper;
-import com.example.taskmanagerapplication.database.UserDBSchema;
+import androidx.room.Room;
+import com.example.taskmanagerapplication.database.TaskDataBase;
+import com.example.taskmanagerapplication.database.UserDAO;
 import com.example.taskmanagerapplication.model.User;
-import static com.example.taskmanagerapplication.database.UserDBSchema.userTable.Cols;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class UserDBRepository implements UsRepository {
+public class UserDBRepository implements UserDAO {
 
     private static UserDBRepository sInstance;
-    private SQLiteDatabase mDatabase;
+    private UserDAO mUserDAO;
     private Context mContext;
 
     public static UserDBRepository getInstance(Context contex) {
@@ -28,81 +22,32 @@ public class UserDBRepository implements UsRepository {
     }
 
     public UserDBRepository(Context context) {
-        mContext = context;
-        TaskDBHelper taskDBHelper = new TaskDBHelper(mContext);
+        mContext = context.getApplicationContext();
 
-        //all 4 checks happens on getDataBase
-        mDatabase = taskDBHelper.getWritableDatabase();
+        TaskDataBase taskDataBase =
+                Room.databaseBuilder(mContext,TaskDataBase.class,"user.db")
+                .allowMainThreadQueries()
+                .build();
+
+        mUserDAO = taskDataBase.getUserDAO();
     }
 
 
     @Override
     public List<User> getUsers() {
-        List<User> users = new ArrayList<>();
-
-        Cursor cursor = mDatabase.query(
-                UserDBSchema.userTable.NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-
-        if (cursor == null || cursor.getCount() == 0)
-            return users;
-
-        try {
-            cursor.moveToFirst();
-
-            while (!cursor.isAfterLast()) {
-
-                User user = getUserFromCursor(cursor);
-
-                users.add(user);
-                cursor.moveToNext();
-            }
-        } finally {
-            cursor.close();
-        }
-
-        return users;
+        return mUserDAO.getUsers();
     }
 
     @Override
     public User getUser(UUID userId) {
-        String where = Cols.UUID + " = ?";
-        String[] whereArgs = new String[]{userId.toString()};
-
-        Cursor cursor = mDatabase.query(
-                UserDBSchema.userTable.NAME,
-                null,
-                where,
-                whereArgs,
-                null,
-                null,
-                null);
-
-        if (cursor == null || cursor.getCount() == 0)
-            return new User();
-
-        try {
-            cursor.moveToFirst();
-            User user = getUserFromCursor(cursor);
-            return user;
-
-        } finally {
-            cursor.close();
-        }
+       return mUserDAO.getUser(userId);
     }
 
     @Override
     public void insertUser(User user) {
-        ContentValues contentValues = getContentValues(user);
-        mDatabase.insert(UserDBSchema.userTable.NAME,null,contentValues);
+        mUserDAO.insertUser(user);
     }
 
-    @Override
     public Boolean searchUser(User user) {
         List<User> users = getUsers();
         String username = user.getUserName();
@@ -117,18 +62,4 @@ public class UserDBRepository implements UsRepository {
         return false;
     }
 
-    private User getUserFromCursor(Cursor cursor) {
-        UUID uuid = UUID.fromString(cursor.getString(cursor.getColumnIndex(Cols.UUID)));
-        String userName = cursor.getString(cursor.getColumnIndex(Cols.USERNAME));
-        String passWord = cursor.getString(cursor.getColumnIndex(Cols.PASSWORD));
-        return new User(uuid,userName,passWord);
-    }
-
-    private ContentValues getContentValues(User user) {
-        ContentValues values = new ContentValues();
-        values.put(Cols.UUID, user.getId().toString());
-        values.put(Cols.USERNAME , user.getUserName());
-        values.put(Cols.PASSWORD, user.getPassword());
-        return values;
-    }
 }

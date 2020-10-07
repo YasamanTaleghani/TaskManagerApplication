@@ -12,6 +12,5 @@ public interface TaskRepositoryInterface {
     void insertTask(Task task);
     void updateTask(Task task);
     void deleteTask(Task task);
-    int getPosition(UUID taskId);
-    boolean searchTask(Task task);
+
 }

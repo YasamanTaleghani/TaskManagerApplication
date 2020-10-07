@@ -10,10 +10,10 @@ import java.util.UUID;
 public class User {
 
     @PrimaryKey(autoGenerate = true)
-    private Long id;
+    private int id;
 
     @ColumnInfo(name = "uuid")
-    private UUID mId;
+    private UUID mUUID;
 
     @ColumnInfo(name = "username")
     private String mUserName;
@@ -23,36 +23,30 @@ public class User {
 
     //Constructor
     public User(UUID id,String userName, String password) {
-        mId = id;
+        mUUID = id;
         mUserName = userName;
         mPassword = password;
-    }
-
-    public User(String userName, String password) {
-        mId = UUID.randomUUID();
-        mUserName = userName;
-        mPassword = password;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setId(UUID id) {
-        mId = id;
-    }
-
-    public User(UUID id) {
-        mId = id;
     }
 
     public User() {
-        this(UUID.randomUUID());
     }
 
-    //Getter & Setters
-    public UUID getId() {
-        return mId;
+    //Getter & Setter
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public UUID getUUID() {
+        return mUUID;
+    }
+
+    public void setUUID(UUID uuid) {
+        mUUID = uuid;
     }
 
     public String getUserName() {

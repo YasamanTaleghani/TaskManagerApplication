@@ -13,7 +13,7 @@ public class Task {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "primaryId")
-    private Long mPrimaryId;
+    private int mPrimaryId;
 
     @ColumnInfo(name = "uuid")
     private UUID mId;
@@ -27,6 +27,9 @@ public class Task {
     @ColumnInfo(name = "date")
     private Date mDate;
 
+    @ColumnInfo(name = "taskType")
+    private String mTaskType;
+
     @ColumnInfo(name = "solved")
     private boolean mSolved;
 
@@ -37,20 +40,23 @@ public class Task {
         mDate = calendar.getTime();
     }
 
-    public Task(UUID id, String title, String description, Date date, Boolean solved){
+    public Task(
+            UUID id, String title, String description, Date date , String taskType, Boolean solved){
         mId = id;
         mTitle = title;
         mDescription = description;
         mDate = date;
+        mTaskType = taskType;
         mSolved = solved;
     }
 
+
     //Getter & Setters
-    public Long getPrimaryId() {
+    public int getPrimaryId() {
         return mPrimaryId;
     }
 
-    public void setPrimaryId(Long primaryId) {
+    public void setPrimaryId(int primaryId) {
         mPrimaryId = primaryId;
     }
 
@@ -84,6 +90,14 @@ public class Task {
 
     public void setDate(Date date) {
         mDate = date;
+    }
+
+    public String getTaskType() {
+        return mTaskType;
+    }
+
+    public void setTaskType(String taskType) {
+        mTaskType = taskType;
     }
 
     public boolean isSolved() {

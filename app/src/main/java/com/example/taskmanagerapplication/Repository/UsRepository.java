@@ -9,7 +9,6 @@ public interface UsRepository {
 
     List<User> getUsers();
     User getUser(UUID userId);
-    Boolean searchUser(User user);
     void insertUser(User user);
 
 }

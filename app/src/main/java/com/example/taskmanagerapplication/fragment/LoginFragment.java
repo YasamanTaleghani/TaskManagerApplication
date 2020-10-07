@@ -85,7 +85,8 @@ public class LoginFragment extends Fragment {
                             getActivity(),
                             "UserName or Password cannot be empty", Toast.LENGTH_LONG).show();
                 } else {
-                    User user = new User(mEditTextUserName.getText().toString().trim(),
+                    User user = new User(UUID.randomUUID(),
+                            mEditTextUserName.getText().toString().trim(),
                             mEditTextPassWord.getText().toString().trim());
 
                     if (mUserDBRepository.searchUser(user)){

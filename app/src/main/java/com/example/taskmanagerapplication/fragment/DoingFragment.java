@@ -20,22 +20,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.taskmanagerapplication.R;
-import com.example.taskmanagerapplication.Repository.DoingRepository;
-import com.example.taskmanagerapplication.Repository.ToDoRepository;
+import com.example.taskmanagerapplication.Repository.TaskRepository;
 import com.example.taskmanagerapplication.model.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 public class DoingFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private DoingTaskAdapter mDoingTaskAdapter;
-    private DoingRepository mDoingRepository;
+    private TaskRepository mTaskRepository;
     private ImageView mImageView;
     private TextView mTextView;
     private FloatingActionButton mFloatingActionButton;
+    private String mStringTaskType = "Doing";
 
     public DoingFragment() {
         // Required empty public constructor
@@ -52,7 +56,7 @@ public class DoingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDoingRepository = DoingRepository.getInstance(getActivity());
+        mTaskRepository = TaskRepository.getInstance(getActivity());
     }
 
     @Override
@@ -88,7 +92,7 @@ public class DoingFragment extends Fragment {
     }
 
     private void updateUI() {
-        List<Task> tasks = mDoingRepository.getTasks();
+        List<Task> tasks = getDoingTasks();
 
         if (tasks.size() == 0) {
             mImageView.setVisibility(View.VISIBLE);
@@ -132,7 +136,9 @@ public class DoingFragment extends Fragment {
         public void bindTask(Task task) {
             mTask = task;
             mTextViewTitle.setText(task.getTitle());
-            mTextViewDate.setText(task.getDate().toString());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = task.getDate();
+            mTextViewDate.setText(simpleDateFormat.format(date));
             mImageViewSolved.setVisibility(View.VISIBLE);
         }
     }
@@ -231,11 +237,14 @@ public class DoingFragment extends Fragment {
             switch (view.getId())
             {
                 case R.id.btn_save:
-                    mTask = new Task();
-                    mTask.setTitle(mTitle.getText().toString());
-                    mTask.setDescription(mDescription.getText().toString());
-                    mTask.setSolved(mCheckBox.isChecked());
-                    mDoingRepository.insertTask(mTask);
+                    UUID id = UUID.randomUUID();
+                    String title = mTitle.getText().toString();
+                    String description = mDescription.getText().toString();
+                    Date date = new Date();
+                    String TaskType = mStringTaskType;
+                    Boolean solved = mCheckBox.isChecked();
+                    mTask = new Task(id,title,description,date,TaskType,solved);
+                    mTaskRepository.insertTask(mTask);
                     updateUI();
                     break;
 
@@ -267,5 +276,19 @@ public class DoingFragment extends Fragment {
             dismiss();
         }
 
+    }
+
+    public List<Task> getDoingTasks(){
+        List<Task> resultTasks = new ArrayList<>();
+        List<Task> tasks = mTaskRepository.getTasks();
+
+        for (int i = 0; i < tasks.size() ; i++) {
+            Task task = tasks.get(i);
+            if (task.getTaskType().equals(mStringTaskType)){
+                resultTasks.add(task);
+            }
+        }
+
+        return resultTasks;
     }
 }

@@ -15,6 +15,8 @@ import com.example.taskmanagerapplication.R;
 import com.example.taskmanagerapplication.Repository.UserDBRepository;
 import com.example.taskmanagerapplication.model.User;
 
+import java.util.UUID;
+
 import static android.app.Activity.RESULT_OK;
 
 
@@ -78,7 +80,8 @@ public class SignUpFragment extends Fragment {
                 if (mEditTextUserName.getText().toString().trim().length()>0 &&
                         mEditTextPassword.getText().toString().trim().length()>0) {
 
-                    User user = new User(mEditTextUserName.getText().toString().trim(),
+                    User user = new User(UUID.randomUUID(),
+                            mEditTextUserName.getText().toString().trim(),
                             mEditTextPassword.getText().toString().trim());
 
                     mUserDBRepository.insertUser(user);
