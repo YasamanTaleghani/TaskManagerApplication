@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -65,6 +68,7 @@ public class ToDoFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTaskRepository = TaskRepository.getInstance(getActivity());
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -78,6 +82,28 @@ public class ToDoFragment extends Fragment {
         initViews();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_menu,menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if (id==R.id.menu_item_clearAll){
+            while (mTaskRepository.getTasks().size()!=0){
+                List<Task> list = mTaskRepository.getTasks();
+                Task task = list.get(0);
+                mTaskRepository.deleteTask(task);
+            }
+            initViews();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
