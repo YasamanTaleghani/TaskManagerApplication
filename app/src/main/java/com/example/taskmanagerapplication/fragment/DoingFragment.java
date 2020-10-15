@@ -115,7 +115,7 @@ public class DoingFragment extends Fragment {
 
         private TextView mTextViewTitle;
         private TextView mTextViewDate;
-        private ImageView mImageViewSolved;
+        private TextView mImageViewSolved;
         private Task mTask;
 
         public TaskHolder(@NonNull View itemView) {
@@ -140,6 +140,7 @@ public class DoingFragment extends Fragment {
             Date date = task.getDate();
             mTextViewDate.setText(simpleDateFormat.format(date));
             mImageViewSolved.setVisibility(View.VISIBLE);
+            mImageViewSolved.setText(Character.toString(mTask.getTitle().charAt(0)));
         }
     }
 

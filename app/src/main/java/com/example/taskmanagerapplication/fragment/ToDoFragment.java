@@ -2,9 +2,11 @@ package com.example.taskmanagerapplication.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +18,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +37,9 @@ import java.util.UUID;
 
 
 public class ToDoFragment extends Fragment {
+
+    public static final int REQUEST_CODE_DATE_PiCKER = 0;
+    public static final int REQUEST_CODE_TIME_PICKER = 1;
 
     private RecyclerView mRecyclerView;
     private ToDoTaskAdapter mToDoTaskAdapter;
@@ -101,22 +108,23 @@ public class ToDoFragment extends Fragment {
         } else {
             mImageView.setVisibility(View.GONE);
             mTextView.setVisibility(View.GONE);
-
-            if (mToDoTaskAdapter == null) {
-                mToDoTaskAdapter = new ToDoTaskAdapter(tasks);
-                mRecyclerView.setAdapter(mToDoTaskAdapter);
-            } else {
-                mToDoTaskAdapter.setTasks(tasks);
-                mToDoTaskAdapter.notifyDataSetChanged();
-            }
         }
+
+        if (mToDoTaskAdapter == null) {
+            mToDoTaskAdapter = new ToDoTaskAdapter(tasks);
+            mRecyclerView.setAdapter(mToDoTaskAdapter);
+        } else {
+            mToDoTaskAdapter.setTasks(tasks);
+            mToDoTaskAdapter.notifyDataSetChanged();
+        }
+
     }
 
     private class TaskHolder extends RecyclerView.ViewHolder {
 
         private TextView mTextViewTitle;
         private TextView mTextViewDate;
-        private ImageView mImageViewSolved;
+        private TextView mImageViewSolved;
         private Task mTask;
 
         public TaskHolder(@NonNull View itemView) {
@@ -145,12 +153,15 @@ public class ToDoFragment extends Fragment {
             Date date = task.getDate();
             mTextViewDate.setText(simpleDateFormat.format(date));
             mImageViewSolved.setVisibility(View.VISIBLE);
+            mImageViewSolved.setText(Character.toString(mTask.getTitle().charAt(0)));
         }
     }
 
-    private class ToDoTaskAdapter extends RecyclerView.Adapter<TaskHolder> {
+    private class ToDoTaskAdapter extends RecyclerView.Adapter<TaskHolder> implements Filterable {
 
         private List<Task> mTasks;
+        private List<Task> contactListFiltered;
+        private List<Task> contactList;
 
         public List<Task> getTasks() {
             return mTasks;
@@ -184,9 +195,48 @@ public class ToDoFragment extends Fragment {
             return mTasks.size();
         }
 
+        @Override
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence charSequence) {
+                    String charString = charSequence.toString();
+
+                    if (charString.isEmpty()) {
+                        contactListFiltered = contactList;
+                    } else {
+                        List<Task> filteredList = new ArrayList<>();
+                        for (Task row : contactList) {
+
+                            // name match condition. this might differ depending on your requirement
+                            // here we are looking for name or phone number match
+                            if (row.getTitle().toLowerCase().contains(charString.toLowerCase()) ||
+                                    row.getDescription().toLowerCase().contains(charSequence) ||
+                                    row.getDate().toString().contains(charSequence)) {
+                                filteredList.add(row);
+                            }
+                        }
+
+                        contactListFiltered = filteredList;
+                    }
+
+                    FilterResults filterResults = new FilterResults();
+                    filterResults.values = contactListFiltered;
+                    return filterResults;
+                }
+
+                @Override
+                protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                    contactListFiltered = (ArrayList<Task>) filterResults.values;
+
+                    // refresh the list with filtered data
+                    notifyDataSetChanged();
+                }
+            };
+        }
     }
 
-    private void setListeners(){
+    private void setListeners() {
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -200,7 +250,7 @@ public class ToDoFragment extends Fragment {
         taskDialogFragment.show();
     }
 
-    public class AddTaskDialogFragment extends Dialog implements android.view.View.OnClickListener{
+    public class AddTaskDialogFragment extends Dialog implements android.view.View.OnClickListener {
 
         private Activity mActivity;
         private Task mTask;
@@ -209,8 +259,9 @@ public class ToDoFragment extends Fragment {
         private Button save, cancel;
         private CheckBox mCheckBox;
         private Button mButtonDatePicker, mButtonTimePicker;
+        private Date date;
 
-        public AddTaskDialogFragment(Activity activity){
+        public AddTaskDialogFragment(Activity activity) {
             super(activity);
             mActivity = activity;
         }
@@ -232,7 +283,7 @@ public class ToDoFragment extends Fragment {
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss");
-            Date date = new Date();
+            date = new Date();
             mButtonDatePicker.setText(simpleDateFormat.format(date));
             mButtonTimePicker.setText(simpleDateFormat1.format(date));
 
@@ -245,19 +296,18 @@ public class ToDoFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            switch (view.getId())
-            {
+            switch (view.getId()) {
                 case R.id.btn_save:
 
                     UUID id = UUID.randomUUID();
                     String title = mTitle.getText().toString();
                     String description = mDescription.getText().toString();
-                    Date date = new Date();
                     String TaskType = mStringTaskType;
                     Boolean solved = mCheckBox.isChecked();
-                    mTask = new Task(id,title,description,date,TaskType,solved);
+                    mTask = new Task(id, title, description, date, TaskType, solved);
                     mTaskRepository.insertTask(mTask);
                     updateUI();
+                    dismiss();
                     break;
 
                 case R.id.btn_cancle:
@@ -266,7 +316,10 @@ public class ToDoFragment extends Fragment {
 
                 case R.id.btn_date:
                     DatePickerFragment datePickerFragment =
-                            DatePickerFragment.newInstance(mTask.getDate());
+                            DatePickerFragment.newInstance(date);
+
+                    datePickerFragment.setTargetFragment(
+                            ToDoFragment.this, REQUEST_CODE_DATE_PiCKER);
 
                     datePickerFragment.show(
                             getActivity().getSupportFragmentManager(),
@@ -274,28 +327,34 @@ public class ToDoFragment extends Fragment {
                     break;
 
                 case R.id.btn_time:
-                    //todo
+                    TimePickerFragment timePickerFragment =
+                            TimePickerFragment.newInstance(date);
+
+                    timePickerFragment.show(
+                            getActivity().getSupportFragmentManager(),
+                            "Fragment_tag_time_picker");
+
                     break;
 
                 default:
                     break;
             }
-            dismiss();
+
         }
 
     }
 
-    public class EditTaskDialogFragment extends Dialog implements android.view.View.OnClickListener{
+    public class EditTaskDialogFragment extends Dialog implements android.view.View.OnClickListener {
 
         private Activity mActivity;
-        private Task mTask=mTaskToDo;
+        private Task mTask = mTaskToDo;
         private Dialog mDialog;
         private EditText mTitle, mDescription;
         private Button save, edit, delet;
         private CheckBox mCheckBox;
         private Button mButtonDatePicker, mButtonTimePicker;
 
-        public EditTaskDialogFragment(Activity activity){
+        public EditTaskDialogFragment(Activity activity) {
             super(activity);
             mActivity = activity;
         }
@@ -339,19 +398,20 @@ public class ToDoFragment extends Fragment {
         @Override
         public void onClick(View view) {
 
-            switch (view.getId())
-            {
+            switch (view.getId()) {
                 case R.id.btn_save:
 
-                    UUID id = mTask.getId();
+                    UUID id = UUID.randomUUID();
                     String title = mTitle.getText().toString();
                     String description = mDescription.getText().toString();
-                    Date date = new Date();
+                    Date date = mTask.getDate();
                     String TaskType = mStringTaskType;
                     Boolean solved = mCheckBox.isChecked();
-                    Task task = new Task(id,title,description,date,TaskType,solved);
-                    mTaskRepository.updateTask(task);
+                    Task task = new Task(id, title, description, date, TaskType, solved);
+                    mTaskRepository.deleteTask(mTask);
+                    mTaskRepository.insertTask(task);
                     updateUI();
+                    dismiss();
                     break;
 
                 case R.id.btn_edit:
@@ -364,6 +424,7 @@ public class ToDoFragment extends Fragment {
                 case R.id.btn_delete:
                     mTaskRepository.deleteTask(mTask);
                     updateUI();
+                    dismiss();
                     break;
 
                 case R.id.btn_date:
@@ -382,22 +443,55 @@ public class ToDoFragment extends Fragment {
                 default:
                     break;
             }
-            dismiss();
+        }
+
+        public void updateTaskDate(Date userSelectedDate) {
+            mTaskToDo.setDate(userSelectedDate);
+            mButtonDatePicker.setText(
+                    new SimpleDateFormat("yyyy.MM.dd").format(mTask.getDate()));
+        }
+
+        public void updateTaskTime(Long userSelectedTime) {
+            mTask.getDate().setTime(userSelectedTime);
+            mButtonTimePicker.setText(
+                    new SimpleDateFormat("HH:mm:ss").format(mTask.getDate()));
         }
 
     }
 
-    public List<Task> getToDoTasks(){
+    public List<Task> getToDoTasks() {
         List<Task> resultTasks = new ArrayList<>();
         List<Task> tasks = mTaskRepository.getTasks();
 
-        for (int i = 0; i < tasks.size() ; i++) {
+        for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
-            if (task.getTaskType().equals(mStringTaskType)){
+            if (task.getTaskType().equals(mStringTaskType)) {
                 resultTasks.add(task);
             }
         }
 
         return resultTasks;
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return;
+
+        /*if (requestCode == REQUEST_CODE_DATE_PiCKER) {
+            Date userSelectedDate =
+                    (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_USER_SELECTED_DATE);
+            updateTaskDate(userSelectedDate);
+        }
+
+        if (requestCode == REQUEST_CODE_TIME_PICKER) {
+            Long userSelectedTime =
+                    data.getLongExtra(TimePickerFragment.USER_SELECTED_TIME, 0);
+            updateTaskTime(userSelectedTime);
+        }*/
+
+    }
+
+
 }

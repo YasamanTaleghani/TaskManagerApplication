@@ -22,6 +22,8 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class ManagerActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CODE_ADD_TASK = 100;
+
     private TabLayout mTabLayout;
     private ViewPager2 mViewPager;
     PageAdapter mPageAdapter;

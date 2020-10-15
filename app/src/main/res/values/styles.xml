@@ -7,4 +7,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="buttonStyle">
+        <item name="backgroundColor">@color/btnColor</item>
+    </style>
+
 </resources>
