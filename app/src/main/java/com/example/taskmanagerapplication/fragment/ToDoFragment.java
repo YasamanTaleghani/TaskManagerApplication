@@ -283,7 +283,6 @@ public class ToDoFragment extends Fragment {
         private Dialog mDialog;
         private EditText mTitle, mDescription;
         private Button save, cancel;
-        private CheckBox mCheckBox;
         private Button mButtonDatePicker, mButtonTimePicker;
         private Date date;
 
@@ -301,7 +300,6 @@ public class ToDoFragment extends Fragment {
 
             save = findViewById(R.id.btn_save);
             cancel = findViewById(R.id.btn_cancle);
-            mCheckBox = findViewById(R.id.checkbox_task);
             mTitle = findViewById(R.id.title_edittext);
             mDescription = findViewById(R.id.description_edittext);
             mButtonDatePicker = findViewById(R.id.btn_date);
@@ -329,8 +327,7 @@ public class ToDoFragment extends Fragment {
                     String title = mTitle.getText().toString();
                     String description = mDescription.getText().toString();
                     String TaskType = mStringTaskType;
-                    Boolean solved = mCheckBox.isChecked();
-                    mTask = new Task(id, title, description, date, TaskType, solved);
+                    mTask = new Task(id, title, description, date, TaskType);
                     mTaskRepository.insertTask(mTask);
                     updateUI();
                     dismiss();
@@ -377,7 +374,6 @@ public class ToDoFragment extends Fragment {
         private Dialog mDialog;
         private EditText mTitle, mDescription;
         private Button save, edit, delet;
-        private CheckBox mCheckBox;
         private Button mButtonDatePicker, mButtonTimePicker;
 
         public EditTaskDialogFragment(Activity activity) {
@@ -395,7 +391,6 @@ public class ToDoFragment extends Fragment {
             save = findViewById(R.id.btn_save);
             edit = findViewById(R.id.btn_edit);
             delet = findViewById(R.id.btn_delete);
-            mCheckBox = findViewById(R.id.checkbox_task);
             mTitle = findViewById(R.id.title_edittext);
             mDescription = findViewById(R.id.description_edittext);
             mButtonDatePicker = findViewById(R.id.btn_date);
@@ -406,7 +401,6 @@ public class ToDoFragment extends Fragment {
             mButtonTimePicker.setEnabled(false);
             mTitle.setText(mTask.getTitle());
             mDescription.setText(mTask.getDescription());
-            mCheckBox.setChecked(mTask.isSolved());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss");
@@ -432,8 +426,7 @@ public class ToDoFragment extends Fragment {
                     String description = mDescription.getText().toString();
                     Date date = mTask.getDate();
                     String TaskType = mStringTaskType;
-                    Boolean solved = mCheckBox.isChecked();
-                    Task task = new Task(id, title, description, date, TaskType, solved);
+                    Task task = new Task(id, title, description, date, TaskType);
                     mTaskRepository.deleteTask(mTask);
                     mTaskRepository.insertTask(task);
                     updateUI();

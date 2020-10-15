@@ -30,8 +30,6 @@ public class Task {
     @ColumnInfo(name = "taskType")
     private String mTaskType;
 
-    @ColumnInfo(name = "solved")
-    private boolean mSolved;
 
     //Constructor
     public Task() {
@@ -41,13 +39,12 @@ public class Task {
     }
 
     public Task(
-            UUID id, String title, String description, Date date , String taskType, Boolean solved){
+            UUID id, String title, String description, Date date , String taskType){
         mId = id;
         mTitle = title;
         mDescription = description;
         mDate = date;
         mTaskType = taskType;
-        mSolved = solved;
     }
 
 
@@ -98,14 +95,6 @@ public class Task {
 
     public void setTaskType(String taskType) {
         mTaskType = taskType;
-    }
-
-    public boolean isSolved() {
-        return mSolved;
-    }
-
-    public void setSolved(boolean solved) {
-        mSolved = solved;
     }
 
 }
