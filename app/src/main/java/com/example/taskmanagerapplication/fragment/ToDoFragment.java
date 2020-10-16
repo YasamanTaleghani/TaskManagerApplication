@@ -369,12 +369,17 @@ public class ToDoFragment extends Fragment {
 
     public class EditTaskDialogFragment extends Dialog implements android.view.View.OnClickListener {
 
+        public static final String TODO = "ToDo";
+        public static final String DOING = "Doing";
+        public static final String DONE = "Done";
+
         private Activity mActivity;
         private Task mTask = mTaskToDo;
         private Dialog mDialog;
         private EditText mTitle, mDescription;
         private Button save, edit, delet;
         private Button mButtonDatePicker, mButtonTimePicker;
+        private CheckBox mCheckBoxTodo, mCheckBoxDoing, mCheckBoxDone;
 
         public EditTaskDialogFragment(Activity activity) {
             super(activity);
@@ -395,6 +400,10 @@ public class ToDoFragment extends Fragment {
             mDescription = findViewById(R.id.description_edittext);
             mButtonDatePicker = findViewById(R.id.btn_date);
             mButtonTimePicker = findViewById(R.id.btn_time);
+            mCheckBoxTodo = findViewById(R.id.checkbox_task_todo);
+            mCheckBoxDoing = findViewById(R.id.checkbox_task_doing);
+            mCheckBoxDone = findViewById(R.id.checkbox_task_done);
+
             mTitle.setEnabled(false);
             mDescription.setEnabled(false);
             mButtonDatePicker.setEnabled(false);
@@ -413,6 +422,9 @@ public class ToDoFragment extends Fragment {
             delet.setOnClickListener(this);
             mButtonDatePicker.setOnClickListener(this);
             mButtonTimePicker.setOnClickListener(this);
+            mCheckBoxTodo.setOnClickListener(this);
+            mCheckBoxDoing.setOnClickListener(this);
+            mCheckBoxDone.setOnClickListener(this);
         }
 
         @Override
@@ -425,8 +437,15 @@ public class ToDoFragment extends Fragment {
                     String title = mTitle.getText().toString();
                     String description = mDescription.getText().toString();
                     Date date = mTask.getDate();
-                    String TaskType = mStringTaskType;
-                    Task task = new Task(id, title, description, date, TaskType);
+                    String stringType;
+                    if (mCheckBoxDoing.isChecked()){
+                        stringType = DOING;
+                    } else if (mCheckBoxDone.isChecked()){
+                        stringType = DONE;
+                    } else{
+                        stringType = TODO;
+                    }
+                    Task task = new Task(id, title, description, date, stringType);
                     mTaskRepository.deleteTask(mTask);
                     mTaskRepository.insertTask(task);
                     updateUI();
@@ -453,10 +472,6 @@ public class ToDoFragment extends Fragment {
                     datePickerFragment.show(
                             getActivity().getSupportFragmentManager(),
                             "Fragment_tag_date_picker");
-                    break;
-
-                case R.id.btn_time:
-                    //todo
                     break;
 
                 default:
