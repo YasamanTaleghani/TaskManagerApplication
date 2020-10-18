@@ -1,26 +1,20 @@
 package com.example.taskmanagerapplication.fragment;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.taskmanagerapplication.R;
 import com.example.taskmanagerapplication.Repository.TaskRepository;
@@ -31,7 +25,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 
 public class DoingFragment extends Fragment {
@@ -48,7 +41,6 @@ public class DoingFragment extends Fragment {
     public DoingFragment() {
         // Required empty public constructor
     }
-
 
     public static DoingFragment newInstance() {
         DoingFragment fragment = new DoingFragment();
@@ -102,7 +94,14 @@ public class DoingFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateUI();
+        Log.d("Log", "onResume: ");
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("Log", "onPause: ");
         updateUI();
     }
 
@@ -155,9 +154,7 @@ public class DoingFragment extends Fragment {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EditTaskDialogFragment editTaskDialogFragment =
-                            new EditTaskDialogFragment(getActivity());
-                    editTaskDialogFragment.show();
+                    //todo
                 }
             });
         }
@@ -222,95 +219,8 @@ public class DoingFragment extends Fragment {
     }
 
     public void openDialog() {
-        AddTaskDialogFragment taskDialogFragment = new AddTaskDialogFragment(getActivity());
-        taskDialogFragment.show();
-    }
-
-    public class AddTaskDialogFragment extends Dialog implements android.view.View.OnClickListener{
-
-        private Activity mActivity;
-        private Task mTask;
-        private Dialog mDialog;
-        private EditText mTitle, mDescription;
-        private Button save, cancel;
-        private Button mButtonDatePicker, mButtonTimePicker;
-        private Date date;
-
-        public AddTaskDialogFragment(Activity activity){
-            super(activity);
-            mActivity = activity;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.starting_dialog_layout);
-
-            save = findViewById(R.id.btn_save);
-            cancel = findViewById(R.id.btn_cancle);
-            mTitle = findViewById(R.id.title_edittext);
-            mDescription = findViewById(R.id.description_edittext);
-            mButtonDatePicker = findViewById(R.id.btn_date);
-            mButtonTimePicker = findViewById(R.id.btn_time);
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss");
-            date = new Date();
-            mButtonDatePicker.setText(simpleDateFormat.format(date));
-            mButtonTimePicker.setText(simpleDateFormat1.format(date));
-
-            save.setOnClickListener(this);
-            cancel.setOnClickListener(this);
-            mButtonDatePicker.setOnClickListener(this);
-            mButtonTimePicker.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-
-            switch (view.getId())
-            {
-                case R.id.btn_save:
-                    UUID id = UUID.randomUUID();
-                    String title = mTitle.getText().toString();
-                    String description = mDescription.getText().toString();
-                    Date date = new Date();
-                    String TaskType = mStringTaskType;
-                    mTask = new Task(id,title,description,date,TaskType);
-                    mTaskRepository.insertTask(mTask);
-                    updateUI();
-                    break;
-
-                case R.id.btn_cancle:
-                    dismiss();
-                    break;
-
-                case R.id.btn_date:
-                    DatePickerFragment datePickerFragment =
-                            DatePickerFragment.newInstance(mTask.getDate());
-
-                    //create parent-child relations between CDF and DPF
-                    /*datePickerFragment.setTargetFragment(
-                            CrimeDetailFragment.this,
-                            REQUEST_CODE_DATE_PICKER);*/
-
-                    datePickerFragment.show(
-                            getActivity().getSupportFragmentManager(),
-                            "Fragment_tag_date_picker");
-                    break;
-
-                case R.id.btn_time:
-                    //todo
-                    break;
-
-                default:
-                    break;
-            }
-            dismiss();
-        }
-
+        AddTaskDialogFragment taskDialogFragment =
+                new AddTaskDialogFragment();
     }
 
     public List<Task> getDoingTasks(){
@@ -325,133 +235,6 @@ public class DoingFragment extends Fragment {
         }
 
         return resultTasks;
-    }
-
-    public class EditTaskDialogFragment extends Dialog implements android.view.View.OnClickListener {
-
-        public static final String TODO = "ToDo";
-        public static final String DOING = "Doing";
-        public static final String DONE = "Done";
-
-        private Activity mActivity;
-        private Task mTask = mTaskDoing;
-        private Dialog mDialog;
-        private EditText mTitle, mDescription;
-        private Button save, edit, delet;
-        private Button mButtonDatePicker, mButtonTimePicker;
-        private CheckBox mCheckBoxTodo, mCheckBoxDoing, mCheckBoxDone;
-
-        public EditTaskDialogFragment(Activity activity) {
-            super(activity);
-            mActivity = activity;
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-
-            requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.edit_dialog_layout);
-
-            save = findViewById(R.id.btn_save);
-            edit = findViewById(R.id.btn_edit);
-            delet = findViewById(R.id.btn_delete);
-            mTitle = findViewById(R.id.title_edittext);
-            mDescription = findViewById(R.id.description_edittext);
-            mButtonDatePicker = findViewById(R.id.btn_date);
-            mButtonTimePicker = findViewById(R.id.btn_time);
-            mCheckBoxTodo = findViewById(R.id.checkbox_task_todo);
-            mCheckBoxDoing = findViewById(R.id.checkbox_task_doing);
-            mCheckBoxDone = findViewById(R.id.checkbox_task_done);
-
-            mTitle.setEnabled(false);
-            mDescription.setEnabled(false);
-            mButtonDatePicker.setEnabled(false);
-            mButtonTimePicker.setEnabled(false);
-            mTitle.setText(mTask.getTitle());
-            mDescription.setText(mTask.getDescription());
-
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat simpleDateFormat1 = new SimpleDateFormat("HH:mm:ss");
-            Date date = mTask.getDate();
-            mButtonDatePicker.setText(simpleDateFormat.format(date));
-            mButtonTimePicker.setText(simpleDateFormat1.format(date));
-
-            save.setOnClickListener(this);
-            edit.setOnClickListener(this);
-            delet.setOnClickListener(this);
-            mButtonDatePicker.setOnClickListener(this);
-            mButtonTimePicker.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-
-            switch (view.getId()) {
-                case R.id.btn_save:
-
-                    UUID id = UUID.randomUUID();
-                    String title = mTitle.getText().toString();
-                    String description = mDescription.getText().toString();
-                    Date date = mTask.getDate();
-                    String stringType;
-                    if (mCheckBoxDoing.isChecked()){
-                        stringType = DOING;
-                    } else if (mCheckBoxDone.isChecked()){
-                        stringType = DONE;
-                    } else{
-                        stringType = TODO;
-                    }
-                    Task task = new Task(id, title, description, date, stringType);
-                    mTaskRepository.deleteTask(mTask);
-                    mTaskRepository.insertTask(task);
-                    updateUI();
-                    dismiss();
-                    break;
-
-                case R.id.btn_edit:
-                    mTitle.setEnabled(true);
-                    mDescription.setEnabled(true);
-                    mButtonDatePicker.setEnabled(true);
-                    mButtonTimePicker.setEnabled(true);
-                    break;
-
-                case R.id.btn_delete:
-                    mTaskRepository.deleteTask(mTask);
-                    updateUI();
-                    dismiss();
-                    break;
-
-                case R.id.btn_date:
-                    DatePickerFragment datePickerFragment =
-                            DatePickerFragment.newInstance(mTask.getDate());
-
-                    datePickerFragment.show(
-                            getActivity().getSupportFragmentManager(),
-                            "Fragment_tag_date_picker");
-                    break;
-
-                case R.id.btn_time:
-                    //todo
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        public void updateTaskDate(Date userSelectedDate) {
-            mTaskDoing.setDate(userSelectedDate);
-            mButtonDatePicker.setText(
-                    new SimpleDateFormat("yyyy.MM.dd").format(mTask.getDate()));
-        }
-
-        public void updateTaskTime(Long userSelectedTime) {
-            mTask.getDate().setTime(userSelectedTime);
-            mButtonTimePicker.setText(
-                    new SimpleDateFormat("HH:mm:ss").format(mTask.getDate()));
-        }
-
     }
 
     public List<Task> getToDoTasks() {
